@@ -200,3 +200,278 @@ class KISAPIHook:
         time.sleep(attempt + 1) # 1, 2초 간격으로 대기
 
     return [] # 모든 재시도 실패 시, 빈 리스트를 반환하여 후속 처리의 안정성을 높입니다.
+  
+  def get_kr_stock_basic_info(self, stock_code: str) -> Dict[str, Any]:
+    """[국내 주식 정보] 국내 주식 기본 정보를 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드 (예: "005930").
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 주식 기본 정보 딕셔너리를 담은 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/quotations/search-stock-info",
+      tr_id="CTPF1002R",
+      params={
+        "PDNO": stock_code,   # 상품번호 (종목코드)
+        "PRDT_TYPE_CD": "300" # 상품타입코드 (300: 주식)
+      },
+      error_prefix="주식 기본 정보 조회"
+    )
+
+  def get_kr_stock_balance_sheet(self, stock_code: str) -> List[Dict[str, Any]]:
+    """[국내 주식 정보] 국내 주식 대차대조표를 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 분기별 대차대조표 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/finance/balance-sheet",
+      tr_id="FHKST66430100",
+      params={
+        "FID_DIV_CLS_CODE": "1",       # 분류 구분 코드 (0:년, 1:분기)
+        "fid_cond_mrkt_div_code": "J", # 조건 시장 분류 코드 (J: 주식)
+        "fid_input_iscd": stock_code   # 입력 종목코드
+      },
+      error_prefix="주식 대차대조표 조회"
+    )
+
+  def get_kr_stock_income_statement(self, stock_code: str) -> List[Dict[str, Any]]:
+    """[국내 주식 정보] 국내 주식 손익계산서를 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 분기별 손익계산서 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/finance/income-statement",
+      tr_id="FHKST66430200",
+      params={
+        "FID_DIV_CLS_CODE": "1",       # 분류 구분 코드 (0:년, 1:분기)
+        "fid_cond_mrkt_div_code": "J", # 조건 시장 분류 코드 (J: 주식)
+        "fid_input_iscd": stock_code   # 입력 종목코드
+      },
+      error_prefix="국내 주식 손익계산서 조회"
+    )
+  
+  def get_kr_stock_financial_ratio(self, stock_code: str) -> List[Dict[str, Any]]:
+    """[국내 주식 정보] 국내 주식 재무비율을 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 분기별 재무비율 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/finance/financial-ratio",
+      tr_id="FHKST66430300",
+      params={
+        "FID_DIV_CLS_CODE": "1",       # 분류 구분 코드 (0:년, 1:분기)
+        "fid_cond_mrkt_div_code": "J", # 조건 시장 분류 코드 (J:주식)
+        "fid_input_iscd": stock_code   # 입력 종목코드
+      },
+      error_prefix="국내 주식 재무비율 조회"
+    )
+  
+  def get_kr_stock_profit_ratio(self, stock_code: str) -> List[Dict[str, Any]]:
+    """[국내 주식 정보] 국내 주식 수익성비율을 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 분기별 수익성비율 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/finance/profit-ratio",
+      tr_id="FHKST66430400",
+      params={
+        "fid_input_iscd": stock_code, # 입력 종목코드
+        "FID_DIV_CLS_CODE": "1",      # 분류 구분 코드 (0:년, 1:분기)
+        "fid_cond_mrkt_div_code": "J" # 조건 시장 분류 코드 (J:주식)
+      },
+      error_prefix="국내 주식 수익성비율 조회"
+    )
+
+  def get_kr_stock_other_major_ratio(self, stock_code: str) -> List[Dict[str, Any]]:
+    """[국내 주식 정보] 국내 주식 기타주요비율을 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 분기별 기타주요비율 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/finance/other-major-ratios",
+      tr_id="FHKST66430500",
+      params={
+        "fid_input_iscd": stock_code, # 입력 종목코드
+        "fid_div_cls_code": "1",      # 분류 구분 코드(0:년, 1:분기)
+        "fid_cond_mrkt_div_code": "J" # 조건 시장 분류 코드 (J:주식)
+      },
+      error_prefix="국내 주식 기타주요비율 조회"
+    )
+
+  def get_kr_stock_stability_ratio(self, stock_code: str) -> List[Dict[str, Any]]:
+    """[국내 주식 정보] 국내 주식 안정성비율을 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 분기별 안정성비율 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/finance/stability-ratio",
+      tr_id="FHKST66430600",
+      params={
+        "fid_input_iscd": stock_code, # 입력 종목코드
+        "fid_div_cls_code": "1",      # 분류 구분 코드 (0:년, 1:분기)
+        "fid_cond_mrkt_div_code": "J" # 조건 시장 분류 코드 (J:주식)
+      },
+      error_prefix="국내 주식 안정성비율 조회"
+    )
+
+  def get_kr_stock_growth_ratio(self, stock_code: str) -> List[Dict[str, Any]]:
+    """[국내 주식 정보] 국내 주식 성장성비율을 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 분기별 성장성비율 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/finance/growth-ratio",
+      tr_id="FHKST66430800",
+      params={
+        "fid_input_iscd": stock_code, # 입력 종목코드
+        "fid_div_cls_code": "1",      # 분류 구분 코드 (0:년, 1:분기)
+        "fid_cond_mrkt_div_code": "J" # 조건 시장 분류 코드 (J:주식)
+      },
+      error_prefix="국내 주식 성장성비율 조회"
+    )
+  
+  def get_kr_stock_inquire_price_basic(self, stock_code: str) -> List[Dict[str, Any]]:
+    """[국내 주식 현재가] 국내 주식 현재가를 조회합니다.
+    
+    Note:
+        현재 이 함수의 `path`와 `tr_id`가 '성장성비율' 조회와 동일하게
+        설정되어 있습니다. 올바른 현재가 조회(예: FHKST01010100)로 수정이 필요합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 현재가 정보 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/finance/growth-ratio",
+      tr_id="FHKST66430800",
+      params={
+        "fid_input_iscd": stock_code, # 입력 종목코드
+        "fid_div_cls_code": "1",      # 분류 구분 코드 (0:년, 1:분기)
+        "fid_cond_mrkt_div_code": "J" # 조건 시장 분류 코드 (J:주식)
+      },
+      error_prefix="국내 주식 성장성비율 조회"
+    )
+  
+  def get_kr_stock_dividend(self, stock_code: str, start_date: str, end_date: str) -> List[Dict[str, Any]]:
+    """[국내 주식 정보] 기간별 배당금 정보를 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+      start_date (str): 조회 시작일 (YYYYMMDD 형식).
+      end_date (str): 조회 종료일 (YYYYMMDD 형식).
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 기간 내 배당금 정보 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/ksdinfo/dividend",
+      tr_id="HHKDB669102C0",
+      params={
+        "CTS": "",            # 연속 조회 검증값 (첫 조회 시 빈칸)
+        "GB1": "0",           # 조회구분 (0:배당전체, 1:결산배당, 2:중간배당)
+        "F_DT": start_date,   # 시작일
+        "T_DT": end_date,     # 종료일
+        "SHT_CD": stock_code, # 입력 종목코드
+        "HIGH_GB": "",        # 고배당여부 (빈칸)
+      },
+      error_prefix="국내 주식 예탁원 정보(배당일정) 조회"
+    )
+  
+  def get_kr_stock_estimate_perform(self, stock_code: str) -> List[Dict[str, Any]]:
+    """[국내 주식 정보] 국내 주식 종목추정실적을 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 종목추정실적 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/quotations/estimate-perform",
+      tr_id="HHKST668300C0",
+      params={
+        "SHT_CD": stock_code # 종목코드
+      },
+      error_prefix="국내 주식 종목추정실적 조회"
+    )
+  
+  def get_kr_stock_invest_opinion(self, stock_code: str, start_date: str, end_date: str) -> List[Dict[str, Any]]:
+    """[국내 주식 정보] 기간별 종목 투자 의견을 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+      start_date (str): 조회 시작일 (YYYYMMDD 형식).
+      end_date (str): 조회 종료일 (YYYYMMDD 형식).
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 기간 내 투자 의견 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/quotations/invest-opinion",
+      tr_id="FHKST663300C0",
+      params={
+        "FID_COND_MRKT_DIV_CODE": "J",    # 조건 시장 분류 코드(J:주식)
+        "FID_COND_SCR_DIV_CODE": "16633", # 조건 화면 분류 코드 (Primary Key)
+        "FID_INPUT_ISCD": stock_code,     # 입력 종목코드
+        "FID_INPUT_DATE_1": start_date,   # 시작일
+        "FID_INPUT_DATE_2": end_date,     # 종료일
+      },
+      error_prefix="국내 주식 종목투자의견 조회"
+    )
+  
+  def get_kr_stock_invest_opbysec(self, stock_code: str, start_date: str, end_date: str) -> List[Dict[str, Any]]:
+    """[국내 주식 정보] 기간별 증권사별 투자의견을 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+      start_date (str): 조회 시작일 (YYYYMMDD 형식).
+      end_date (str): 조회 종료일 (YYYYMMDD 형식).
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 기간 내 증권사별 투자의견 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/quotations/invest-opbysec",
+      tr_id="FHKST663400C0",
+      params={
+        "FID_COND_MRKT_DIV_CODE": "J",    # 조건 시장 분류 코드(J:주식)
+        "FID_COND_SCR_DIV_CODE": "16633", # 조건 화면 분류 코드 (Primary Key)
+        "FID_INPUT_ISCD": stock_code,     # 입력 종목코드
+        "FID_DIV_CLS_CODE": "0",          # 분류구분코드 (0: 전체, 1: 매수, 2: 중립, 3: 매도)
+        "FID_INPUT_DATE_1": start_date,   # 시작일
+        "FID_INPUT_DATE_2": end_date,     # 종료일
+      },
+      error_prefix="국내 주식 증권사별 투자의견 조회"
+    )
