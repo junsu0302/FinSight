@@ -7,98 +7,127 @@ import pandas as pd
 
 from src.hooks.KIS_API_hook import KISAPIHook
 from src.utils.get_asset_list import get_asset_list
-from src.data.schemas.KIS_schemas import KrStockBasicInfo, KrStockBalanceSheet, KrStockFinancialRatio, KrStockGrowthRatio, KrStockIncomeStatement, KrStockOtherMajorRatio, KrStockProfitRatio, KrStockStabilityRatio, KrStockDividend, KrStockEstimatePerform, KrStockInvestOpinion, KrStockInvestOpbysec
+from src.data.schemas.KIS_schemas import KrStockBasicInfo, KrStockBalanceSheet, KrStockFinancialRatio, KrStockGrowthRatio, KrStockIncomeStatement, KrStockOtherMajorRatio, KrStockProfitRatio, KrStockStabilityRatio, KrStockDividend, KrStockEstimatePerform, KrStockInvestOpinion, KrStockInvestOpbysec, KrStockPriceBasic, KrStockPriceDetail, KrStockAskingPrice, KrStockInvestor, KrStockMember, KrStockDailyItemchartprice
 from src.data.db_handler import DBHandler
 from src.etl.transformer.KIS_transformer import KISTransformer
 
-# --- CONFIG 정의 ---
+# ----- [국내 주식 정보] CONFIG 정의 -----
 KR_STOCK_BASIC_INFO_CONFIG = {
-  "description": "한국 주식 종목 기본 정보",
+  "description": "한국 주식 종목 기본 정보", "schemas": KrStockBasicInfo,
   "asset": "kr_stock", "path": "basic_info", "table_type": "stock_info",
-  "schemas": KrStockBasicInfo, "api_method_name": "get_kr_stock_basic_info",
   "params": { "stock_code": "{ticker}" }
 }
 
 KR_STOCK_BALANCE_SHEET_CONFIG = {
-  "description": "국내 주식 대차대조표",
+  "description": "국내 주식 대차대조표", "schemas": KrStockBalanceSheet,
   "asset": "kr_stock", "path": "balance_sheet", "table_type": "stock_info",
-  "schemas": KrStockBalanceSheet, "api_method_name": "get_kr_stock_balance_sheet",
   "params": { "stock_code": "{ticker}" }
 }
 
 KR_STOCK_INCOME_STATEMENT_CONFIG = {
-  "description": "국내 주식 손익계산서",
+  "description": "국내 주식 손익계산서", "schemas": KrStockIncomeStatement,
   "asset": "kr_stock", "path": "income_statement", "table_type": "stock_info",
-  "schemas": KrStockIncomeStatement, "api_method_name": "get_kr_stock_income_statement",
   "params": { "stock_code": "{ticker}" }
 }
 
 KR_STOCK_FINANCIAL_RATIO_CONFIG = {
-  "description": "국내 주식 재무 비율",
+  "description": "국내 주식 재무 비율", "schemas": KrStockFinancialRatio,
   "asset": "kr_stock", "path": "financial_ratio", "table_type": "stock_info",
-  "schemas": KrStockFinancialRatio, "api_method_name": "get_kr_stock_financial_ratio",
   "params": { "stock_code": "{ticker}" }
 }
 
 KR_STOCK_PROFIT_RATIO_CONFIG = {
-  "description": "국내 주식 수익성비율",
+  "description": "국내 주식 수익성비율", "schemas": KrStockProfitRatio,
   "asset": "kr_stock", "path": "profit_ratio", "table_type": "stock_info",
-  "schemas": KrStockProfitRatio, "api_method_name": "get_kr_stock_profit_ratio",
   "params": { "stock_code": "{ticker}" }
 }
 
 KR_STOCK_OTHER_MAJOR_RATIO_CONFIG = {
-  "description": "국내 주식 기타 주요 비율",
+  "description": "국내 주식 기타 주요 비율", "schemas": KrStockOtherMajorRatio,
   "asset": "kr_stock", "path": "other_major_ratio", "table_type": "stock_info",
-  "schemas": KrStockOtherMajorRatio, "api_method_name": "get_kr_stock_other_major_ratio",
   "params": { "stock_code": "{ticker}" }
 }
 
 KR_STOCK_STABILITY_RATIO_CONFIG = {
-  "description": "국내 주식 안정성 비율",
+  "description": "국내 주식 안정성 비율", "schemas": KrStockStabilityRatio,
   "asset": "kr_stock", "path": "stability_ratio", "table_type": "stock_info",
-  "schemas": KrStockStabilityRatio, "api_method_name": "get_kr_stock_stability_ratio",
   "params": { "stock_code": "{ticker}" }
 }
 
 KR_STOCK_GROWTH_RATIO_CONFIG = {
-  "description": "국내 주식 성장성 비율",
+  "description": "국내 주식 성장성 비율", "schemas": KrStockGrowthRatio,
   "asset": "kr_stock", "path": "growth_ratio", "table_type": "stock_info",
-  "schemas": KrStockGrowthRatio, "api_method_name": "get_kr_stock_growth_ratio",
   "params": { "stock_code": "{ticker}" }
   
 }
 
 KR_STOCK_DIVIDEND_CONFIG = {
-  "description": "국내 주식 배당일정",
+  "description": "국내 주식 배당일정", "schemas": KrStockDividend,
   "asset": "kr_stock", "path": "dividend", "table_type": "stock_info",
-  "schemas": KrStockDividend, "api_method_name": "get_kr_stock_dividend",
   "date_column": "record_date", "default_start_date": "20040101",
   "params": { "start_date": "{start_date}", "end_date": "{end_date}", "stock_code": "{ticker}" },
 }
 
 KR_STOCK_ESTIMATE_PERFORM_CONFIG = {
-  "description": "국내 주식 종목추정실적",
+  "description": "국내 주식 종목추정실적", "schemas": KrStockEstimatePerform,
   "asset": "kr_stock", "path": "estimate_perform", "table_type": "stock_info",
-  "schemas": KrStockEstimatePerform, "api_method_name": "get_kr_stock_estimate_perform",
-  "params": { "stock_code": "{ticker}" }, 
-  "transformer_method_name": "transform_estimate_perform",
+  "transformer_name": "estimate_perform",
+  "params": { "stock_code": "{ticker}" }
 }
 
 KR_STOCK_INVEST_OPINION_CONFIG = {
+  "description": "국내 주식 종목 투자 의견", "schemas": KrStockInvestOpinion,
   "asset": "kr_stock", "path": "invest_opinion", "table_type": "stock_info",
-  "schemas": KrStockInvestOpinion, "api_method_name": "get_kr_stock_invest_opinion",
   "date_column": "stck_bsop_date", "default_start_date": "20040101",
-  "params": { "stock_code": "{ticker}" , "start_date": "{start_date}", "end_date": "{end_date}" },
-  "description": "국내 주식 종목 투자 의견"
+  "params": { "stock_code": "{ticker}" , "start_date": "{start_date}", "end_date": "{end_date}" }
 }
 
 KR_STOCK_INVEST_OPBYSEC_CONFIG = {
+  "description": "국내 주식 증권사별 투자의견", "schemas": KrStockInvestOpbysec,
   "asset": "kr_stock", "path": "invest_opbysec", "table_type": "stock_info",
-  "schemas": KrStockInvestOpbysec, "api_method_name": "get_kr_stock_invest_opbysec",
   "date_column": "stck_bsop_date", "default_start_date": "20040101",
-  "params": { "stock_code": "{ticker}" , "start_date": "{start_date}", "end_date": "{end_date}" },
-  "description": "국내 주식 증권사별 투자의견"
+  "params": { "stock_code": "{ticker}" , "start_date": "{start_date}", "end_date": "{end_date}" }
+}
+
+# ----- [국내 주식 시세] CONFIG 정의 -----
+
+KR_STOCK_PRICE_BASIC = {
+  "description": "한국 주식 시세 기본 정보", "schemas": KrStockPriceBasic,
+  "asset": "kr_stock", "path": "price_basic", "table_type": "stock_price",
+  "params": { "stock_code": "{ticker}" }
+}
+
+KR_STOCK_PRICE_DETAIL = {
+  "description": "한국 주식 시세 세부 정보", "schemas": KrStockPriceDetail,
+  "asset": "kr_stock", "path": "price_detail", "table_type": "stock_price",
+  "params": { "stock_code": "{ticker}" }
+}
+
+KR_STOCK_ASKING_PRICE = {
+  "description": "한국 주식 호가/예상체결", "schemas": KrStockAskingPrice,
+  "asset": "kr_stock", "path": "asking_price", "table_type": "stock_price",
+  "transformer_name": "asking_price",
+  "params": { "stock_code": "{ticker}" }
+}
+
+KR_STOCK_INVESTOR = {
+  "description": "한국 주식 투자자 정보", "schemas": KrStockInvestor,
+  "asset": "kr_stock", "path": "investor", "table_type": "stock_price",
+  "params": { "stock_code": "{ticker}" }
+}
+
+KR_STOCK_MEMBER = {
+  "description": "한국 주식 회원사 정보", "schemas": KrStockMember,
+  "asset": "kr_stock", "path": "member", "table_type": "stock_price",
+  "params": { "stock_code": "{ticker}" }
+}
+
+KR_STOCK_DAILY_ITEMCHARTPRICE = {
+  "description": "한국 주식 기간별 시세", "schemas": KrStockDailyItemchartprice,
+  "asset": "kr_stock", "path": "daily_itemchartprice", "table_type": "stock_price",
+  "transformer_name": "daily_itemchartprice",
+  "date_column": "stck_bsop_date", "default_start_date": "20040101",
+  "params": { "stock_code": "{ticker}" , "start_date": "{start_date}", "end_date": "{end_date}" }
 }
 
 
@@ -121,7 +150,6 @@ def generate_date_chunks(start_date_str, end_date_str, years_per_chunk=1):
 def KIS_collector(config: dict):
   desc = config["description"]
   asset, path, table_type = config["asset"], config["path"], config["table_type"]
-  api_method_name = config["api_method_name"]
   params_template = config.get("params", {})
   table_name = f"{config['asset']}_{config['path']}"
 
@@ -174,11 +202,10 @@ def KIS_collector(config: dict):
     print("수집된 데이터가 없습니다."); return
 
   raw_df = pd.DataFrame(all_raw_results)
-  transformer_method_name = config.get("transformer_method_name")
+  transformer_name = config.get("transformer_name")
   
-  if transformer_method_name:
-    transform_function = getattr(transformer, transformer_method_name)
-    final_df = transform_function(raw_df)
+  if transformer_name:
+    final_df = transformer.transform(transformer_name=transformer_name, raw_df=raw_df)
   else:
     final_df = raw_df
   
@@ -186,22 +213,31 @@ def KIS_collector(config: dict):
     schema_columns = [field.name for field in fields(config["schemas"])]
 
     sql_column_order = ['ticker'] + [col for col in schema_columns if col != 'ticker']
-    
+
     final_df = final_df.reindex(columns=sql_column_order)
       
   db_handler.insert_data(final_df, insert_sql_path)
 
 
 if __name__ == "__main__":
-  KIS_collector(KR_STOCK_BASIC_INFO_CONFIG)
-  KIS_collector(KR_STOCK_BALANCE_SHEET_CONFIG)
-  KIS_collector(KR_STOCK_INCOME_STATEMENT_CONFIG)
-  KIS_collector(KR_STOCK_FINANCIAL_RATIO_CONFIG)
-  KIS_collector(KR_STOCK_PROFIT_RATIO_CONFIG)
-  KIS_collector(KR_STOCK_OTHER_MAJOR_RATIO_CONFIG)
-  KIS_collector(KR_STOCK_STABILITY_RATIO_CONFIG)
-  KIS_collector(KR_STOCK_GROWTH_RATIO_CONFIG)
-  KIS_collector(KR_STOCK_DIVIDEND_CONFIG)
-  KIS_collector(KR_STOCK_ESTIMATE_PERFORM_CONFIG)
-  KIS_collector(KR_STOCK_INVEST_OPINION_CONFIG)
-  KIS_collector(KR_STOCK_INVEST_OPBYSEC_CONFIG)
+  # ----- [국내 주식 정보] Collector -----
+  # KIS_collector(KR_STOCK_BASIC_INFO_CONFIG)
+  # KIS_collector(KR_STOCK_BALANCE_SHEET_CONFIG)
+  # KIS_collector(KR_STOCK_INCOME_STATEMENT_CONFIG)
+  # KIS_collector(KR_STOCK_FINANCIAL_RATIO_CONFIG)
+  # KIS_collector(KR_STOCK_PROFIT_RATIO_CONFIG)
+  # KIS_collector(KR_STOCK_OTHER_MAJOR_RATIO_CONFIG)
+  # KIS_collector(KR_STOCK_STABILITY_RATIO_CONFIG)
+  # KIS_collector(KR_STOCK_GROWTH_RATIO_CONFIG)
+  # KIS_collector(KR_STOCK_DIVIDEND_CONFIG)
+  # KIS_collector(KR_STOCK_ESTIMATE_PERFORM_CONFIG)
+  # KIS_collector(KR_STOCK_INVEST_OPINION_CONFIG)
+  # KIS_collector(KR_STOCK_INVEST_OPBYSEC_CONFIG)
+
+  # ----- [국내 주식 시세] Collector -----
+  # KIS_collector(KR_STOCK_PRICE_BASIC)
+  # KIS_collector(KR_STOCK_PRICE_DETAIL)
+  # KIS_collector(KR_STOCK_ASKING_PRICE)
+  # KIS_collector(KR_STOCK_INVESTOR)
+  # KIS_collector(KR_STOCK_MEMBER)
+  KIS_collector(KR_STOCK_DAILY_ITEMCHARTPRICE)

@@ -475,3 +475,123 @@ class KISAPIHook:
       },
       error_prefix="국내 주식 증권사별 투자의견 조회"
     )
+  
+  def get_kr_stock_price_basic(self, stock_code: str) -> List[Dict[str, Any]]:
+    """[국내 주식 시세] 국내 주식의 기본 시세를 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 국내 주식 기본 시세 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/quotations/inquire-price",
+      tr_id="FHKST01010100",
+      params={
+        "FID_COND_MRKT_DIV_CODE": "J", # 조건 시장 분류 코드 (J:KRX, NX:NXT, UN:통합)
+        "FID_INPUT_ISCD": stock_code   # 입력 종목코드
+      },
+      error_prefix="국내 주식 현재가 기본 시세 조회"
+    )
+  
+  def get_kr_stock_price_detail(self, stock_code: str) -> List[Dict[str, Any]]:
+    """[국내 주식 시세] 국내 주식의 세부 시세를 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 국내 주식 세부 시세 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/quotations/inquire-price-2",
+      tr_id="FHPST01010000",
+      params={
+        "FID_COND_MRKT_DIV_CODE": "J", # 조건 시장 분류 코드 (J:KRX, NX:NXT, UN:통합)
+        "FID_INPUT_ISCD": stock_code   # 입력 종목코드
+      },
+      error_prefix="국내 주식 현재가 세부 시세 조회"
+    )
+  
+  def get_kr_stock_asking_price(self, stock_code: str) -> List[Dict[str, Any]]:
+    """[국내 주식 시세] 국내 주식의 호가/예상체결 정보를 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 국내 주식 세부 시세 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/quotations/inquire-asking-price-exp-ccn",
+      tr_id="FHKST01010200",
+      params={
+        "FID_COND_MRKT_DIV_CODE": "J", # 조건 시장 분류 코드 (J:KRX, NX:NXT, UN:통합)
+        "FID_INPUT_ISCD": stock_code   # 입력 종목코드
+      },
+      error_prefix="국내 주식 호가/예상체결 정보 조회"
+    )
+  
+  def get_kr_stock_investor(self, stock_code: str) -> List[Dict[str, Any]]:
+    """[국내 주식 시세] 국내 주식의 투자자 정보를 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 국내 주식 세부 시세 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/quotations/inquire-investor",
+      tr_id="FHKST01010900",
+      params={
+        "FID_COND_MRKT_DIV_CODE": "J", # 조건 시장 분류 코드 (J:KRX, NX:NXT, UN:통합)
+        "FID_INPUT_ISCD": stock_code   # 입력 종목코드
+      },
+      error_prefix="국내 주식 투자자 정보 조회"
+    )
+  
+  def get_kr_stock_member(self, stock_code: str) -> List[Dict[str, Any]]:
+    """[국내 주식 시세] 국내 주식의 회원사 정보를 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 국내 주식 세부 시세 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/quotations/inquire-member",
+      tr_id="FHKST01010600",
+      params={
+        "FID_COND_MRKT_DIV_CODE": "J", # 조건 시장 분류 코드 (J:KRX, NX:NXT, UN:통합)
+        "FID_INPUT_ISCD": stock_code   # 입력 종목코드
+      },
+      error_prefix="국내 주식 회원사 정보 조회"
+    )
+  
+  def get_kr_stock_daily_itemchartprice(self, stock_code: str, start_date: str, end_date: str) -> List[Dict[str, Any]]:
+    """[국내 주식 시세] 국내 주식의 기간별 시세를 조회합니다.
+    
+    Args:
+      stock_code (str): 조회할 종목의 표준 코드.
+      start_date (str): 조회 시작일 (YYYYMMDD 형식).
+      end_date (str): 조회 종료일 (YYYYMMDD 형식).
+
+    Returns:
+      List[Dict[str, Any]]: 조회된 국내 주식 세부 시세 딕셔너리의 리스트.
+    """
+    return self._send_request(
+      path="/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice",
+      tr_id="FHKST03010100",
+      params={
+        "FID_COND_MRKT_DIV_CODE": "J",  # 조건 시장 분류 코드 (J:KRX, NX:NXT, UN:통합)
+        "FID_INPUT_ISCD": stock_code,   # 입력 종목코드
+        "FID_INPUT_DATE_1": start_date, # 시작일
+        "FID_INPUT_DATE_2": end_date,   # 종료일
+        "FID_PERIOD_DIV_CODE": "D",     # 기간분류코드 (D:일봉, W:주봉, M:월봉, Y:년봉)
+        "FID_ORG_ADJ_PRC": "0"          # 수정주가 원주가 가격 여부 (0:수정주가, 1:원주가)
+      },
+      error_prefix="국내 주식 기간별 시세 조회"
+    )

@@ -3,6 +3,8 @@ import pandas as pd
 from typing import Dict
 from .interfaces import TransformerStrategy
 from .strategies.estimate_perform_strategy import EstimatePerformStrategy
+from .strategies.asking_price_strategy import AskingPriceStrategy
+from .strategies.daily_itermchartprice_strategy import DailyItemchartPriceStrategy
 
 class KISTransformer:
   """
@@ -12,6 +14,8 @@ class KISTransformer:
   def __init__(self):
     self._strategies: Dict[str, TransformerStrategy] = {
       "estimate_perform": EstimatePerformStrategy(),
+      "asking_price": AskingPriceStrategy(),
+      "daily_itemchartprice": DailyItemchartPriceStrategy(),
       }
 
   def transform(self, transformer_name: str, raw_df: pd.DataFrame) -> pd.DataFrame:
