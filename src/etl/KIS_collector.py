@@ -126,26 +126,45 @@ KR_STOCK_DAILY_ITEMCHARTPRICE = {
   "description": "한국 주식 기간별 시세", "schemas": KrStockDailyItemchartprice,
   "asset": "kr_stock", "path": "daily_itemchartprice", "table_type": "stock_price",
   "transformer_name": "daily_itemchartprice",
-  "date_column": "stck_bsop_date", "default_start_date": "20040101",
+  "date_column": "itewhol_loan_rmnd_ratem", "default_start_date": "20040101",
   "params": { "stock_code": "{ticker}" , "start_date": "{start_date}", "end_date": "{end_date}" }
 }
 
 
 load_dotenv()
 
-def generate_date_chunks(start_date_str, end_date_str, years_per_chunk=1):
-  if not start_date_str or not end_date_str: return [(None, None)]
-  start_date = datetime.strptime(start_date_str, "%Y%m%d")
-  end_date = datetime.strptime(end_date_str, "%Y%m%d")
-  chunks = []
-  current_start = start_date
-  while current_start <= end_date:
-    current_end = current_start + timedelta(days=365 * years_per_chunk - 1)
-    if current_end > end_date:
-      current_end = end_date
-    chunks.append((current_start.strftime("%Y%m%d"), current_end.strftime("%Y%m%d")))
-    current_start = current_end + timedelta(days=1)
-  return chunks
+def generate_date_ranges(start_date_str: str, end_date_str: str, days_per_chunk: int = 100):
+    """
+    주어진 시작일과 종료일을 특정 일수(days_per_chunk) 단위로 나누어 날짜 구간 리스트를 생성합니다.
+    KIS API의 '기간별 시세' 조회 시 최대 100일 제한을 준수하기 위해 사용됩니다.
+
+    Args:
+        start_date_str (str): 시작일 (YYYYMMDD 형식)
+        end_date_str (str): 종료일 (YYYYMMDD 형식)
+        days_per_chunk (int, optional): 한 구간의 최대 일수. 기본값은 100.
+
+    Returns:
+        list[tuple[str, str]]: (시작일, 종료일) 튜플의 리스트.
+    """
+    if not start_date_str or not end_date_str:
+        return [(None, None)]
+
+    start_date = datetime.strptime(start_date_str, "%Y%m%d")
+    end_date = datetime.strptime(end_date_str, "%Y%m%d")
+
+    ranges = []
+    current_start = start_date
+    while current_start <= end_date:
+        # 현재 시작일로부터 N-1일 뒤를 구간의 종료일로 설정 (예: 100일 기간)
+        current_end = current_start + timedelta(days=days_per_chunk - 1)
+        if current_end > end_date:
+            current_end = end_date
+        
+        ranges.append((current_start.strftime("%Y%m%d"), current_end.strftime("%Y%m%d")))
+        # 다음 구간의 시작일은 현재 구간 종료일 다음 날로 설정
+        current_start = current_end + timedelta(days=1)
+
+    return ranges
 
 def KIS_collector(config: dict):
   desc = config["description"]
@@ -157,25 +176,29 @@ def KIS_collector(config: dict):
   create_sql_path = f"./sql/{asset}/data_lake/{table_type}/ddl/create_{table_name}.sql"
   insert_sql_path = f"./sql/{asset}/data_lake/{table_type}/dml/insert_{table_name}.sql"
   
-  tickers=["005930","091990","105560","035420","373220","016360","207940","247540","017670","139480","004020","352820"] # Test Tickers
-  #tickers = get_asset_list(config["asset"])
+  # tickers = ["005930","091990","105560","035420","373220","016360","207940","247540","017670","139480","004020","352820"] # Test Tickers
+  tickers = get_asset_list(config["asset"])
   
   db_handler.create_table(create_sql_path)
 
-  date_chunks = [(None, None)]
+  date_ranges = [(None, None)] # 날짜 파라미터가 없는 API를 위한 기본값
   if config.get("date_column"):
-    start_date = db_handler.get_latest_date(
-      table_name=table_name, date_column=config["date_column"],
+    latest_date = db_handler.get_latest_date(
+      table_name=table_name, 
+      date_column=config["date_column"],
       default_start_date=config["default_start_date"]
     )
-    end_date = datetime.today().strftime('%Y%m%d')
-    if start_date > end_date:
-      print(f"✅ 모든 데이터가 최신 상태입니다. 수집을 종료합니다."); return
-    date_chunks = generate_date_chunks(start_date, end_date, config.get("chunk_years", 1))
+    today_str = datetime.today().strftime('%Y%m%d')
+
+    if latest_date > today_str:
+      print(f"✅ [{desc}] 모든 데이터가 최신 상태입니다. 수집을 종료합니다.")
+      return
+    
+    date_ranges = generate_date_ranges(latest_date, today_str, days_per_chunk=100)
 
   all_raw_results = []
   for ticker in tqdm(tickers, desc=desc):
-    for start_chunk, end_chunk in date_chunks:
+    for start_chunk, end_chunk in date_ranges:
       try:
         api_function = getattr(kis_hook, f"get_{asset}_{path}")
         dynamic_params = {}
@@ -221,23 +244,23 @@ def KIS_collector(config: dict):
 
 if __name__ == "__main__":
   # ----- [국내 주식 정보] Collector -----
-  # KIS_collector(KR_STOCK_BASIC_INFO_CONFIG)
-  # KIS_collector(KR_STOCK_BALANCE_SHEET_CONFIG)
-  # KIS_collector(KR_STOCK_INCOME_STATEMENT_CONFIG)
-  # KIS_collector(KR_STOCK_FINANCIAL_RATIO_CONFIG)
-  # KIS_collector(KR_STOCK_PROFIT_RATIO_CONFIG)
-  # KIS_collector(KR_STOCK_OTHER_MAJOR_RATIO_CONFIG)
-  # KIS_collector(KR_STOCK_STABILITY_RATIO_CONFIG)
-  # KIS_collector(KR_STOCK_GROWTH_RATIO_CONFIG)
-  # KIS_collector(KR_STOCK_DIVIDEND_CONFIG)
-  # KIS_collector(KR_STOCK_ESTIMATE_PERFORM_CONFIG)
-  # KIS_collector(KR_STOCK_INVEST_OPINION_CONFIG)
-  # KIS_collector(KR_STOCK_INVEST_OPBYSEC_CONFIG)
+  KIS_collector(KR_STOCK_BASIC_INFO_CONFIG)
+  KIS_collector(KR_STOCK_BALANCE_SHEET_CONFIG)
+  KIS_collector(KR_STOCK_INCOME_STATEMENT_CONFIG)
+  KIS_collector(KR_STOCK_FINANCIAL_RATIO_CONFIG)
+  KIS_collector(KR_STOCK_PROFIT_RATIO_CONFIG)
+  KIS_collector(KR_STOCK_OTHER_MAJOR_RATIO_CONFIG)
+  KIS_collector(KR_STOCK_STABILITY_RATIO_CONFIG)
+  KIS_collector(KR_STOCK_GROWTH_RATIO_CONFIG)
+  KIS_collector(KR_STOCK_DIVIDEND_CONFIG)
+  KIS_collector(KR_STOCK_ESTIMATE_PERFORM_CONFIG)
+  KIS_collector(KR_STOCK_INVEST_OPINION_CONFIG)
+  KIS_collector(KR_STOCK_INVEST_OPBYSEC_CONFIG)
 
   # ----- [국내 주식 시세] Collector -----
-  # KIS_collector(KR_STOCK_PRICE_BASIC)
-  # KIS_collector(KR_STOCK_PRICE_DETAIL)
-  # KIS_collector(KR_STOCK_ASKING_PRICE)
-  # KIS_collector(KR_STOCK_INVESTOR)
-  # KIS_collector(KR_STOCK_MEMBER)
+  KIS_collector(KR_STOCK_PRICE_BASIC)
+  KIS_collector(KR_STOCK_PRICE_DETAIL)
+  KIS_collector(KR_STOCK_ASKING_PRICE)
+  KIS_collector(KR_STOCK_INVESTOR)
+  KIS_collector(KR_STOCK_MEMBER)
   KIS_collector(KR_STOCK_DAILY_ITEMCHARTPRICE)
