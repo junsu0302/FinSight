@@ -67,3 +67,10 @@ FinSight 프로젝트는 총 9개의 핵심 단계로 구성되어 있으며, �
 ├── docker-compose.yml
 └── README.md
 ```
+
+## ✍️ 코드 기여 가이드
+
+프로젝트의 일관성 유지를 위해 아래 가이드 문서를 반드시 숙지해 주시기 바랍니다.
+
+- [문서 ID 명명 규칙](https://github.com/junsu0302/FinSight/discussions/15)
+- [테스트 케이스 명세 규칙](https://github.com/junsu0302/FinSight/discussions/17)
