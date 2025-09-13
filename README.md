@@ -1,12 +1,12 @@
-# FinSight 🤖
+# FinSight
 
-**바쁜 직장인을 위한 AI 포트폴리오 Co-pilot**
+**바쁜 직장인을 위한 AI 포트폴리오**
 
 FinSight는 복잡한 금융 시장 데이터 속에서 길을 잃지 않도록 돕는 인공지능 자산 관리 서비스입니다. 저희는 단순한 수익률 극대화를 넘어, **위험 관리 기반의 안정적인 장기 투자**를 지향합니다. 시계열 데이터(주가, 재무)와 비정형 텍스트 데이터(뉴스)를 통합적으로 분석하여 미래 주가를 예측하고, 이를 바탕으로 최적의 포트폴리오를 구성합니다.
 
 무엇보다 FinSight는 XAI(설명 가능한 인공지능)를 통해 **'왜' 이러한 포트폴리오를 추천하는지** 그 근거를 투명하게 제공함으로써, 투자자가 확신을 가지고 자신의 자산을 운용할 수 있도록 돕는 것을 목표로 합니다.
 
-![FinSight Project Overview](/Users/junsu/code/Project/FinSight/img/FinSight_Introduce.png)
+![FinSight Project Overview](https://github.com/junsu0302/FinSight/blob/main/img/FinSight_Introduce.png?raw=true)
 
 ---
 
@@ -14,7 +14,7 @@ FinSight는 복잡한 금융 시장 데이터 속에서 길을 잃지 않도록 
 
 FinSight의 전체 시스템 아키텍처는 데이터 수집부터 포트폴리오 추천, 그리고 그 근거를 설명하는 과정까지의 모든 흐름을 보여줍니다.
 
-![FinSight System Architecture](/Users/junsu/code/Project/FinSight/img/FinSight_Architecture.png)
+![FinSight System Architecture](https://github.com/junsu0302/FinSight/blob/main/img/FinSight_Architecture.png?raw=true)
 
 ---
 
@@ -41,8 +41,8 @@ FinSight 프로젝트는 총 9개의 핵심 단계로 구성되어 있으며, �
 
 | 단계   | 주요 활동 및 목표                                                                            | Discussion 링크    |
 | :----- | :------------------------------------------------------------------------------------------- | :----------------- |
-| **P1** | **핵심 인프라 구축**: Docker, Git을 활용한 로컬 개발 환경 설정.                              | _(링크 추가 예정)_ |
-| **P2** | **데이터 수집 자동화**: Airflow를 이용한 일일 데이터 수집 파이프라인 구축.                   | _(링크 추가 예정)_ |
+| **P1** | **핵심 인프라 구축**: Docker, Git을 활용한 로컬 개발 환경 설정.                              | [Docker based Architecture](https://github.com/junsu0302/FinSight/discussions/12) |
+| **P2** | **데이터 수집 자동화**: Airflow를 이용한 일일 데이터 수집 파이프라인 구축.                   | [ETL Pipeline Docs](https://github.com/junsu0302/FinSight/discussions/22) |
 | **P3** | **피처 엔지니어링**: 기술적 & 기본적 분석 지표를 계산하여 DWH에 저장.                        | _(링크 추가 예정)_ |
 | **P4** | **뉴스 이벤트 추출**: LLM을 활용해 뉴스에서 금융 이벤트를 추출하고 Elasticsearch에 저장.     | _(링크 추가 예정)_ |
 | **P5** | **통합 피처 스토어 구축**: 모든 정형/비정형 피처를 결합하여 모델 학습용 데이터셋 생성.       | _(링크 추가 예정)_ |
