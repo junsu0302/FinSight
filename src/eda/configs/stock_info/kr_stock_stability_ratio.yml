@@ -1,0 +1,30 @@
+table_name: "kr_stock_stability_ratio"
+primary_key: ["ticker", "stac_yymm"]
+
+# 1단계: 자동화된 데이터 클리닝 규칙
+auto_cleaning_rules:
+  replace_as_null: ["0", 0] # 결측치로 처리할 값 목록
+  drop_nulls_threshold_count: 100 # 이 개수 이상의 결측치를 가진 컬럼 제거
+  drop_unique_threshold: 1 # 이 개수 이하의 고유값을 가진 컬럼 제거
+
+# 2단계: 분석가가 직접 선정한 최종 사용 컬럼 목록
+manual_column_selection:
+  - ticker
+  - stac_yymm
+  - lblt_rate
+  - bram_depn
+  - crnt_rate
+  - quck_rate
+
+# 3단계: 자동 데이터 타입 변환 규칙
+auto_dtype_rules:
+  category_ratio: 0.05
+  date_success_rate: 0.95
+
+# 4단계: 수동 데이터 타입 변환 맵
+manual_dtype_map:
+  float64:
+    - lblt_rate
+    - bram_depn
+    - crnt_rate
+    - quck_rate
