@@ -1,2 +1,12 @@
+# SQL 파일 언어 지정
 *.sql linguist-language=sql
 *.my linguist-language=sql
+
+# YAML 파일 언어 지정
+*.yml linguist-language=YAML
+*.custom_yml linguist-language=YAML
+
+# Dockerfile 언어 지정
+Dockerfile linguist-language=Dockerfile
+*.dockerfile linguist-language=Dockerfile
+*.df linguist-language=Dockerfile
