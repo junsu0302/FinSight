@@ -1,0 +1,113 @@
+table_name: "kr_stock_asking_price"
+primary_key: ["ticker"]
+
+# 1단계: 자동화된 데이터 클리닝 규칙
+auto_cleaning_rules:
+  replace_as_null: ["0", 0] # 결측치로 처리할 값 목록
+  drop_nulls_threshold: 50.0 # 이 개수 이상의 결측치를 가진 컬럼 제거
+  drop_unique_threshold: 1 # 이 개수 이하의 고유값을 가진 컬럼 제거
+
+# 2단계: 분석가가 직접 선정한 최종 사용 컬럼 목록
+manual_column_selection:
+  - ticker
+  - aspr_acpt_hour
+  - askp1
+  - askp2
+  - askp3
+  - askp4
+  - askp5
+  - askp6
+  - askp7
+  - askp8
+  - askp9
+  - askp10
+  - bidp1
+  - bidp2
+  - bidp3
+  - bidp4
+  - bidp5
+  - bidp6
+  - bidp7
+  - bidp8
+  - bidp9
+  - bidp10
+  - askp_rsqn1
+  - askp_rsqn2
+  - askp_rsqn3
+  - askp_rsqn4
+  - askp_rsqn5
+  - askp_rsqn6
+  - askp_rsqn7
+  - askp_rsqn8
+  - askp_rsqn9
+  - askp_rsqn10
+  - bidp_rsqn1
+  - bidp_rsqn2
+  - bidp_rsqn3
+  - bidp_rsqn4
+  - bidp_rsqn5
+  - bidp_rsqn6
+  - bidp_rsqn7
+  - bidp_rsqn8
+  - bidp_rsqn9
+  - bidp_rsqn10
+  - total_askp_rsqn
+  - total_bidp_rsqn
+  - ntby_aspr_rsqn
+  - new_mkop_cls_code
+
+# 3단계: 자동 데이터 타입 변환 규칙
+auto_dtype_rules:
+  category_ratio: 0.05
+  date_success_rate: 0.95
+
+# 4단계: 수동 데이터 타입 변환 맵
+manual_dtype_map:
+  category:
+    - ticker
+    - new_mkop_cls_code
+  Int64:
+    - aspr_acpt_hour
+    - askp1
+    - askp2
+    - askp3
+    - askp4
+    - askp5
+    - askp6
+    - askp7
+    - askp8
+    - askp9
+    - askp10
+    - bidp1
+    - bidp2
+    - bidp3
+    - bidp4
+    - bidp5
+    - bidp6
+    - bidp7
+    - bidp8
+    - bidp9
+    - bidp10
+    - askp_rsqn1
+    - askp_rsqn2
+    - askp_rsqn3
+    - askp_rsqn4
+    - askp_rsqn5
+    - askp_rsqn6
+    - askp_rsqn7
+    - askp_rsqn8
+    - askp_rsqn9
+    - askp_rsqn10
+    - bidp_rsqn1
+    - bidp_rsqn2
+    - bidp_rsqn3
+    - bidp_rsqn4
+    - bidp_rsqn5
+    - bidp_rsqn6
+    - bidp_rsqn7
+    - bidp_rsqn8
+    - bidp_rsqn9
+    - bidp_rsqn10
+    - total_askp_rsqn
+    - total_bidp_rsqn
+    - ntby_aspr_rsqn

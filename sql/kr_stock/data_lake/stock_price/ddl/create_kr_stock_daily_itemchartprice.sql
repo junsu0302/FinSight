@@ -4,7 +4,6 @@
 CREATE TABLE IF NOT EXISTS kr_stock_daily_itemchartprice(
   id SERIAL PRIMARY KEY,
   ticker TEXT NOT NULL,
-  stck_bsop_date TEXT NOT NULL,
   prdy_vrss TEXT,
   prdy_vrss_sign TEXT,
   prdy_ctrt TEXT,
@@ -35,6 +34,7 @@ CREATE TABLE IF NOT EXISTS kr_stock_daily_itemchartprice(
   eps TEXT,
   pbr TEXT,
   itewhol_loan_rmnd_ratem TEXT,
+  stck_bsop_date TEXT NOT NULL,
   stck_clpr TEXT,
   flng_cls_code TEXT,
   prtt_rate TEXT,

@@ -2,18 +2,17 @@
 -- (ticker, stck_bsop_date)가 동일한 데이터가 이미 존재하는 경우 최신 정보로 업데이트합니다. (UPSERT)
 
 INSERT INTO kr_stock_daily_itemchartprice (
-  ticker, stck_bsop_date, prdy_vrss, prdy_vrss_sign, prdy_ctrt, stck_prdy_clpr, acml_vol,
+  ticker, prdy_vrss, prdy_vrss_sign, prdy_ctrt, stck_prdy_clpr, acml_vol,
   acml_tr_pbmn, hts_kor_isnm, stck_prpr, stck_shrn_iscd, prdy_vol, stck_mxpr, stck_llam,
   stck_oprc, stck_hgpr, stck_lwpr, stck_prdy_oprc, stck_prdy_hgpr, stck_prdy_lwpr, askp,
   bidp, prdy_vrss_vol, vol_tnrt, stck_fcam, lstn_stcn, cpfn, hts_avls, per, eps, pbr,
-  itewhol_loan_rmnd_ratem, stck_clpr, flng_cls_code, prtt_rate, mod_yn, revl_issu_reas
+  itewhol_loan_rmnd_ratem, stck_bsop_date, stck_clpr, flng_cls_code, prtt_rate, mod_yn, revl_issu_reas
 ) VALUES (
   %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
   %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
 )
 ON CONFLICT (ticker, stck_bsop_date) DO UPDATE SET
   prdy_vrss = EXCLUDED.prdy_vrss,
-  prdy_vrss_sign = EXCLUDED.prdy_vrss_sign,
   prdy_ctrt = EXCLUDED.prdy_ctrt,
   stck_prdy_clpr = EXCLUDED.stck_prdy_clpr,
   acml_vol = EXCLUDED.acml_vol,
@@ -42,6 +41,7 @@ ON CONFLICT (ticker, stck_bsop_date) DO UPDATE SET
   eps = EXCLUDED.eps,
   pbr = EXCLUDED.pbr,
   itewhol_loan_rmnd_ratem = EXCLUDED.itewhol_loan_rmnd_ratem,
+  prdy_vrss_sign = EXCLUDED.prdy_vrss_sign,
   stck_clpr = EXCLUDED.stck_clpr,
   flng_cls_code = EXCLUDED.flng_cls_code,
   prtt_rate = EXCLUDED.prtt_rate,

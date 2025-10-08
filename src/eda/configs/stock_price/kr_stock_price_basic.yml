@@ -1,0 +1,160 @@
+table_name: "kr_stock_price_basic"
+primary_key: ["ticker"]
+
+# 1단계: 자동화된 데이터 클리닝 규칙
+auto_cleaning_rules:
+  replace_as_null: ["0", 0] # 결측치로 처리할 값 목록
+  drop_nulls_threshold: 50.0 # 이 개수 이상의 결측치를 가진 컬럼 제거
+  drop_unique_threshold: 1 # 이 개수 이하의 고유값을 가진 컬럼 제거
+
+# 2단계: 분석가가 직접 선정한 최종 사용 컬럼 목록
+manual_column_selection:
+  - ticker
+  - iscd_stat_cls_code
+  - marg_rate
+  - new_hgpr_lwpr_cls_code
+  - bstp_kor_isnm
+  - crdt_able_yn
+  - grmn_rate_cls_code
+  - elw_pblc_yn
+  - stck_prpr
+  - prdy_vrss
+  - prdy_vrss_sign
+  - prdy_ctrt
+  - acml_tr_pbmn
+  - acml_vol
+  - prdy_vrss_vol_rate
+  - stck_oprc
+  - stck_hgpr
+  - stck_lwpr
+  - stck_mxpr
+  - stck_llam
+  - stck_sdpr
+  - wghn_avrg_stck_prc
+  - hts_frgn_ehrt
+  - frgn_ntby_qty
+  - pgtr_ntby_qty
+  - pvt_scnd_dmrs_prc
+  - pvt_frst_dmrs_prc
+  - pvt_pont_val
+  - pvt_frst_dmsp_prc
+  - pvt_scnd_dmsp_prc
+  - dmrs_val
+  - dmsp_val
+  - cpfn
+  - rstc_wdth_prc
+  - stck_fcam
+  - stck_sspr
+  - aspr_unit
+  - lstn_stcn
+  - hts_avls
+  - per
+  - pbr
+  - vol_tnrt
+  - eps
+  - bps
+  - d250_hgpr
+  - d250_hgpr_date
+  - d250_hgpr_vrss_prpr_rate
+  - d250_lwpr
+  - d250_lwpr_date
+  - d250_lwpr_vrss_prpr_rate
+  - stck_dryy_hgpr
+  - dryy_hgpr_vrss_prpr_rate
+  - dryy_hgpr_date
+  - stck_dryy_lwpr
+  - dryy_lwpr_vrss_prpr_rate
+  - dryy_lwpr_date
+  - w52_hgpr
+  - w52_hgpr_vrss_prpr_ctrt
+  - w52_hgpr_date
+  - w52_lwpr
+  - w52_lwpr_vrss_prpr_ctrt
+  - w52_lwpr_date
+  - whol_loan_rmnd_rate
+  - stck_shrn_iscd
+  - fcam_cnnm
+  - cpfn_cnnm
+  - frgn_hldn_qty
+  - last_ssts_cntg_qty
+
+# 3단계: 자동 데이터 타입 변환 규칙
+auto_dtype_rules:
+  category_ratio: 0.05
+  date_success_rate: 0.95
+
+# 4단계: 수동 데이터 타입 변환 맵
+manual_dtype_map:
+  category:
+    - ticker
+    - iscd_stat_cls_code
+    - new_hgpr_lwpr_cls_code
+    - bstp_kor_isnm
+    - grmn_rate_cls_code
+    - prdy_vrss_sign
+    - stck_shrn_iscd
+  bool:
+    - crdt_able_yn
+    - elw_pblc_yn
+  Int64:
+    - stck_prpr
+    - prdy_vrss
+    - stck_oprc
+    - stck_hgpr
+    - stck_lwpr
+    - stck_mxpr
+    - stck_llam
+    - stck_sdpr
+    - pvt_scnd_dmrs_prc
+    - pvt_frst_dmrs_prc
+    - pvt_pont_val
+    - pvt_frst_dmsp_prc
+    - pvt_scnd_dmsp_prc
+    - dmrs_val
+    - dmsp_val
+    - rstc_wdth_prc
+    - stck_fcam
+    - stck_sspr
+    - aspr_unit
+    - bps
+    - d250_hgpr
+    - d250_lwpr
+    - stck_dryy_hgpr
+    - stck_dryy_lwpr
+    - w52_hgpr
+    - w52_lwpr
+    - fcam_cnnm
+    - acml_tr_pbmn
+    - acml_vol
+    - frgn_ntby_qty
+    - pgtr_ntby_qty
+    - cpfn
+    - lstn_stcn
+    - hts_avls
+    - frgn_hldn_qty
+    - last_ssts_cntg_qty
+    # cpfn_cnnm은 전처리 후 int64로 변환 예정
+  float64:
+    - marg_rate
+    - prdy_ctrt
+    - prdy_vrss_vol_rate
+    - wghn_avrg_stck_prc
+    - hts_frgn_ehrt
+    - per
+    - pbr
+    - vol_tnrt
+    - eps
+    - d250_hgpr_vrss_prpr_rate
+    - d250_lwpr_vrss_prpr_rate
+    - dryy_hgpr_vrss_prpr_rate
+    - dryy_lwpr_vrss_prpr_rate
+    - w52_hgpr_vrss_prpr_ctrt
+    - w52_lwpr_vrss_prpr_ctrt
+    - whol_loan_rmnd_rate
+  datetime64[ns]:
+    - d250_hgpr_date
+    - d250_lwpr_date
+    - dryy_hgpr_date
+    - dryy_lwpr_date
+    - w52_hgpr_date
+    - w52_lwpr_date

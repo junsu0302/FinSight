@@ -64,7 +64,7 @@ KR_STOCK_GROWTH_RATIO_CONFIG = {
 KR_STOCK_DIVIDEND_CONFIG = {
   "description": "국내 주식 배당일정", "schemas": KrStockDividend,
   "asset": "kr_stock", "path": "dividend", "table_type": "stock_info",
-  "date_column": "record_date", "default_start_date": "20040101",
+  "date_column": "record_date", "default_start_date": "19810101",
   "params": { "start_date": "{start_date}", "end_date": "{end_date}", "stock_code": "{ticker}" },
 }
 
@@ -78,14 +78,14 @@ KR_STOCK_ESTIMATE_PERFORM_CONFIG = {
 KR_STOCK_INVEST_OPINION_CONFIG = {
   "description": "국내 주식 종목 투자 의견", "schemas": KrStockInvestOpinion,
   "asset": "kr_stock", "path": "invest_opinion", "table_type": "stock_info",
-  "date_column": "stck_bsop_date", "default_start_date": "20040101",
+  "date_column": "stck_bsop_date", "default_start_date": "19810101",
   "params": { "stock_code": "{ticker}" , "start_date": "{start_date}", "end_date": "{end_date}" }
 }
 
 KR_STOCK_INVEST_OPBYSEC_CONFIG = {
   "description": "국내 주식 증권사별 투자의견", "schemas": KrStockInvestOpbysec,
   "asset": "kr_stock", "path": "invest_opbysec", "table_type": "stock_info",
-  "date_column": "stck_bsop_date", "default_start_date": "20040101",
+  "date_column": "stck_bsop_date", "default_start_date": "19810101",
   "params": { "stock_code": "{ticker}" , "start_date": "{start_date}", "end_date": "{end_date}" }
 }
 
@@ -126,7 +126,7 @@ KR_STOCK_DAILY_ITEMCHARTPRICE = {
   "description": "한국 주식 기간별 시세", "schemas": KrStockDailyItemchartprice,
   "asset": "kr_stock", "path": "daily_itemchartprice", "table_type": "stock_price",
   "transformer_name": "daily_itemchartprice",
-  "date_column": "itewhol_loan_rmnd_ratem", "default_start_date": "20040101",
+  "date_column": "itewhol_loan_rmnd_ratem", "default_start_date": "19810101",
   "params": { "stock_code": "{ticker}" , "start_date": "{start_date}", "end_date": "{end_date}" }
 }
 
