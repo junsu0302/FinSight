@@ -1,5 +1,3 @@
-# preprocessor.py 수정 후 최종 코드
-
 import pandas as pd
 from tasks import Task
 

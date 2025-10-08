@@ -27,13 +27,14 @@ class MissingValueCleaner(Task):
     return df
 
 class NullColumnRemover(Task):
-  """결측치 개수가 기준치를 넘는 컬럼을 제거하는 작업"""
-  def __init__(self, threshold_count: int = 100):
-    self.threshold = threshold_count
+  """결측치 비율이 기준치를 넘는 컬럼을 제거하는 작업"""
+  def __init__(self, threshold: float = 50.0):
+    self.threshold = threshold
 
   def execute(self, df: pd.DataFrame, verbose: bool) -> pd.DataFrame:
-    missing_counts = df.isnull().sum()
-    cols_to_drop = missing_counts[missing_counts >= self.threshold].index
+    missing_count = df.isnull().sum()
+    missing_percent = ((missing_count / len(df)) * 100).round(2)
+    cols_to_drop = missing_percent[missing_percent >= self.threshold].index
     if not cols_to_drop.empty:
       if verbose:
         print(f"NullColumnRemover {len(cols_to_drop)} columns (threshold >= {self.threshold}) : {cols_to_drop.tolist()}")
@@ -41,8 +42,8 @@ class NullColumnRemover(Task):
 
 class ConstantColumnRemover(Task):
   """고유값이 기준치 이하인 상수 컬럼을 제거하는 작업"""
-  def __init__(self, nunique_threshold: int = 1):
-    self.threshold = nunique_threshold
+  def __init__(self, threshold: int = 1):
+    self.threshold = threshold
 
   def execute(self, df: pd.DataFrame, verbose: bool) -> pd.DataFrame:
     nunique = df.nunique()
@@ -64,6 +65,52 @@ class ColumnSelector(Task):
       print(f"ColumnSelector: {len(df.columns) - len(valid_cols)} columns : {self.columns_to_keep}")
 
     return df[valid_cols]
+  
+class ColumnRemover(Task):
+  """설정된 컬럼들을 제거하는 작업"""
+  def __init__(self, columns_to_drop: list):
+    self.columns_to_drop = columns_to_drop
+
+  def execute(self, df: pd.DataFrame, verbose: bool) -> pd.DataFrame:
+    if verbose:
+      print(f"ColumnDropper: Dropping {self.columns_to_drop}")
+    return df.drop(columns=self.columns_to_drop, errors='ignore')
+  
+class DeduplicateRemover(Task):
+  """중복된 행을 제거하는 작업"""
+  def __init__(self, subset: list = None, keep: str = 'first'):
+    self.subset = subset
+    self.keep = keep
+
+  def execute(self, df: pd.DataFrame, verbose: bool) -> pd.DataFrame:
+    before_len = len(df)
+    df_deduplicated = df.drop_duplicates(subset=self.subset, keep=self.keep)
+    after_len = len(df_deduplicated)
+    if verbose:
+      print(f"Deduplicator: Removed {before_len - after_len} duplicate rows.")
+    return df_deduplicated
+  
+class MergeDataFrame(Task):
+  """두 개 이상의 데이터프레임을 병합하는 Task"""
+  def __init__(self, on: list, how: str = 'left', suffixes: list = None):
+    self.on = on
+    self.how = how
+    self.suffixes = suffixes if suffixes else ['_x', '_y']
+
+  def execute(self, dfs: list[pd.DataFrame], verbose: bool) -> pd.DataFrame:
+    if not isinstance(dfs, list) or len(dfs) < 2:
+      # 단일 df가 들어올 경우를 대비한 방어 코드
+      if isinstance(dfs, pd.DataFrame):
+        return dfs
+      raise ValueError("MergeTask requires a list of at least two dataframes.")
+    
+    merged_df = dfs[0]
+    for i in range(1, len(dfs)):
+      merged_df = pd.merge(merged_df, dfs[i], on=self.on, how=self.how, suffixes=self.suffixes)
+    
+    if verbose:
+      print(f"MergeTask executed. Final shape: {merged_df.shape}")
+    return merged_df
 
 class AutomaticTypeConverter(Task):
   """저비율 카테고리 및 날짜 타입을 자동으로 변환하는 작업"""

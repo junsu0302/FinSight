@@ -223,7 +223,14 @@ class DBHandler:
       return
 
     try:
-      df.to_sql(table_name, con=self.engine, if_exists=if_exists, index=False)
+      df.to_sql(
+        table_name,
+        con=self.engine,
+        if_exists=if_exists,
+        index=False,
+        chunksize=10000,  # 데이터를 10,000행씩 나누어 저장
+        method='multi'    # 여러 행을 하나의 INSERT 구문으로 묶어 속도 향상
+      )
     except Exception as e:
       print(f"❌ 데이터베이스 저장 중 에러 발생: {e}")
 

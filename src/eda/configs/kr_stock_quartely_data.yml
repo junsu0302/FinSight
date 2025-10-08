@@ -1,0 +1,83 @@
+# 최종 테이블 이름
+final_table_name: "kr_stock_quartely_data"
+
+source_tables:
+  income_statement:
+    table_name: "kr_stock_income_statement"
+    columns:
+      - "ticker"
+      - "stac_yymm"
+      - "sale_account"
+      - "sale_cost"
+      - "sale_totl_prfi"
+      - "bsop_prti"
+      - "op_prfi"
+      - "thtr_ntin"
+  balance_sheet:
+    table_name: "kr_stock_balance_sheet"
+    columns:
+      - "ticker"
+      - "stac_yymm"
+      - "cras"
+      - "fxas"
+      - "total_aset"
+      - "flow_lblt"
+      - "fix_lblt"
+      - "total_lblt"
+      - "total_cptl"
+  financial_ratio:
+    table_name: "kr_stock_financial_ratio"
+    columns:
+      - "ticker"
+      - "stac_yymm"
+      - "grs"
+      - "bsop_prfi_inrt"
+      - "ntin_inrt"
+      - "roe_val"
+      - "eps"
+      - "sps"
+      - "bps"
+      - "rsrv_rate"
+      - "lblt_rate"
+  stability_ratio:
+    table_name: "kr_stock_stability_ratio"
+    columns:
+      - "ticker"
+      - "stac_yymm"
+      - "bram_depn"
+      - "crnt_rate"
+      - "quck_rate"
+  growth_ratio:
+    table_name: "kr_stock_growth_ratio"
+    columns:
+      - "ticker"
+      - "stac_yymm"
+      - "equt_inrt"
+      - "totl_aset_inrt"
+  profit_ratio:
+    table_name: "kr_stock_profit_ratio"
+    columns:
+      - "ticker"
+      - "stac_yymm"
+      - "cptl_ntin_rate"
+      - "sale_ntin_rate"
+      - "sale_totl_rate"
+  other_major_ratio:
+    table_name: "kr_stock_other_major_ratio"
+    columns:
+      - "ticker"
+      - "stac_yymm"
+      - "payout_rate"
+      - "ebitda"
+
+merge_strategy:
+  base_table: "income_statement"
+  merge_sequence:
+    - "balance_sheet"
+    - "financial_ratio"
+    - "stability_ratio"
+    - "growth_ratio"
+    - "profit_ratio"
+    - "other_major_ratio"
+  join_key: ["ticker", "stac_yymm"]
+  join_how: "left"

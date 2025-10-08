@@ -30,8 +30,8 @@ def run_pipeline(config_path: str, verbose:bool=False):
   processed_df = (
     preprocessor
     .add_task(MissingValueCleaner(values_to_replace=config['auto_cleaning_rules']['replace_as_null']))
-    .add_task(NullColumnRemover(threshold_count=config['auto_cleaning_rules']['drop_nulls_threshold_count']))
-    .add_task(ConstantColumnRemover(nunique_threshold=config['auto_cleaning_rules']['drop_unique_threshold']))
+    .add_task(NullColumnRemover(threshold=config['auto_cleaning_rules']['drop_nulls_threshold']))
+    .add_task(ConstantColumnRemover(threshold=config['auto_cleaning_rules']['drop_unique_threshold']))
     .add_task(ColumnSelector(columns_to_keep=config['manual_column_selection']))
     .add_task(AutomaticTypeConverter(
       category_ratio=config['auto_dtype_rules']['category_ratio'],
