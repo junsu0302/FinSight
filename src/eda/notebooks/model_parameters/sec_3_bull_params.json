@@ -1,0 +1,42 @@
+{
+    "dataset": "sec_3_bull",
+    "metrics": {
+        "RMSE": 0.09137130839718471,
+        "MAE": 0.07232163906156908,
+        "Adj_R2": -0.16408526426032033
+    },
+    "best_scaler": "RobustScaler",
+    "ensemble_weights": {
+        "w_xgb": 0.9975661576105349,
+        "w_rf": 0.001194829181836039,
+        "w_lr": 5.1599505952657095e-05,
+        "w_nn": 0.0011874137016764097
+    },
+    "best_params_optuna": {
+        "scaler": "RobustScaler",
+        "w_xgb": 0.9975661576105349,
+        "w_rf": 0.001194829181836039,
+        "w_lr": 5.1599505952657095e-05,
+        "xgb_lambda": 0.006373954897555325,
+        "xgb_alpha": 4.4264588922338275,
+        "xgb_max_depth": 3,
+        "xgb_n_estimators": 750,
+        "xgb_learning_rate": 0.13646785288943336,
+        "xgb_subsample": 0.7648076214972351,
+        "xgb_colsample_bytree": 0.9152044984202972,
+        "xgb_min_child_weight": 6,
+        "rf_n_estimators": 160,
+        "rf_max_depth": 19,
+        "rf_min_samples_leaf": 14,
+        "ridge_alpha": 0.08815859240494896,
+        "nn_n_layers": 1,
+        "nn_units_layer_1": 78,
+        "nn_dropout_1": 0.42689450546362245,
+        "nn_units_layer_2": 64,
+        "nn_dropout_2": 0.21957924138064827,
+        "nn_optimizer": "rmsprop",
+        "nn_learning_rate": 0.003784758849444656,
+        "nn_activation": "tanh",
+        "nn_batch_size": 32
+    }
+}
